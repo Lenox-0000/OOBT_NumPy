@@ -19,7 +19,7 @@ The project is carried out in a 3-person team:
 | :--- | :--- | :--- |
 | [Adrian Zając] | **Project Manager / Tester** | Work coordination, schedule, code review, acceptance tests. |
 | [Tytus Barański] | **DevOps / CI Engineer** | GitHub Actions configuration, building module from source, resolving build issues. |
-| [Franciszek_Latała] | **QA / Test Engineer** | Implementation of functional tests (pytest), performance tests, results analysis. |
+| [Franciszek Latała] | **QA / Test Engineer** | Implementation of functional tests (pytest), performance tests, results analysis. |
 
 ---
 
