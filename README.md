@@ -12,7 +12,7 @@ As part of the project, the pipeline is (or will be) designed to:
 
 ---
 
-## Team and Roles
+## Team and Roles (To Be Revised)
 The project is carried out in a 3-person team:
 
 | Name and Surname | Team Role | Main Responsibilities |
@@ -31,6 +31,22 @@ The main communication channels in the team are:
 ---
 
 ## Project Schedule
+
+1. **Week 1 (02.03.2026 - 08.03.2026)**
+   - [x] Setting up the repository.
+   - [x] Creating a README file with the goal and description.
+   - [x] Defining team roles and communication channels.
+   - [x] Planning initial test scenarios.
+2. **Week 2 (09.03.2026 - 15.03.2026)**
+   - Setting up the download of the latest stable commit from the official NumPy Github repo
+   - Setting up the local compilation and build of the module
+3. **Week 3-4 (16.03.2026 - 29.03.2026)**
+   -Implementing performance tests
+4. **Week 5-9 (30.03.2026 - 03.05.2026)**
+   -Implementing functional tests
+5. **Week 10 (04.05.2026 - 10.05.2026)**
+   -Implementing acceptance tests
+   -Project finalization
 
 ---
 
@@ -56,10 +72,10 @@ The main communication channels in the team are:
 ## Initial Test Scenarios (Test Strategy)
 
 All detailed steps and acceptance criteria for acceptance test scenarios will be placed in the `docs/test_scenarios.md` document. 
-Outline of our strategy:
+Outline the test strategy:
 
 ### 1. Functional Tests (3-5 scenarios)
-We will focus on verifying the use of fundamental NumPy functionalities:
+Focus on verifying the use of fundamental NumPy functionalities:
 * **Matrix Operations (Matrix Multiplication)**: Verifying the correctness of multiplication results (e.g., `np.dot` / `@`) for different data types.
 * **Aggregations and Statistics**: Verifying functions such as `np.mean`, `np.median`, `np.std` for handling data with edge values (e.g., NaN).
 * **3D Dimension Manipulation**: Testing the `reshape`, `transpose` functions, and correct memory layout after operations.
