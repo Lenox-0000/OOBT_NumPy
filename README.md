@@ -25,7 +25,7 @@ The project is carried out in a 3-person team:
 
 ## Communication Channels
 The main communication channels in the team are:
-* **Messenger / Microsoft Teams** – daily communication, quick problem solving, and synchronization meetings.
+* **Messenger** – daily communication, quick problem solving, and synchronization meetings.
 * **GitHub (Issues & Pull Requests)** – task management, ticket assignment, code review, and history of project agreements.
 
 ---
@@ -62,7 +62,7 @@ The main communication channels in the team are:
 │   ├── functional/             # Functional test scripts
 │   └── performance/            # Performance test scripts testing NumPy
 ├── scripts/
-│   └── build_numpy.sh          # Script to locally build NumPy from source
+│   └── build_numpy.py          # Script to locally build NumPy from source
 ├── requirements.txt            # Dependencies needed to run the tests
 └── README.md                   # This file
 ```
