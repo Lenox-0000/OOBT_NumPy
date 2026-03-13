@@ -15,11 +15,11 @@ As part of the project, the pipeline is (or will be) designed to:
 ## Team and Roles (To Be Revised)
 The project is carried out in a 3-person team:
 
-| Name and Surname | Team Role | Main Responsibilities |
+| Name and Surname | Team Role | 
 | :--- | :--- | :--- |
-| [Adrian Zając] | **Project Manager / Tester** | Work coordination, schedule, code review, acceptance tests. |
-| [Tytus Barański] | **DevOps / CI Engineer** | GitHub Actions configuration, building module from source, resolving build issues. |
-| [Franciszek Latała] | **QA / Test Engineer** | Implementation of functional tests (pytest), performance tests, results analysis. |
+| [Adrian Zając] | **Project Manager / Tester** |
+| [Tytus Barański] | **Test / CI Engineer** | 
+| [Franciszek Latała] | **Test / CI Engineer** |  
 
 ---
 

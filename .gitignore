@@ -1,0 +1,83 @@
+### Python Core ###
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+### NumPy & Data Science ###
+# Ignore large binary data and datasets
+*.npy
+*.npz
+*.mat
+*.csv
+*.tsv
+
+### Virtual Environments ###
+venv/
+.venv/
+env/
+.env/
+ENV/
+bin/
+Include/
+conda-env/
+
+### Visual Studio (Full IDE) ###
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.v12.suo
+*.v11.suo
+
+# Build and Binary Folders
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+### Visual Studio Code ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+### Testing & Coverage ###
+.target/
+.pytest_cache/
+.tox/
+.nox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+htmlcov/
+.hypothesis/
+
+### System Files ###
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
