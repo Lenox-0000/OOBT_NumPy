@@ -15,11 +15,11 @@ As part of the project, the pipeline is (or will be) designed to:
 ## Team and Roles (To Be Revised)
 The project is carried out in a 3-person team:
 
-| Name and Surname | Team Role | 
-| :--- | :--- | :--- |
+| Name and Surname | Team Role |
+| :--- | :--- |
 | [Adrian Zając] | **Project Manager / Tester** |
-| [Tytus Barański] | **Test / CI Engineer** | 
-| [Franciszek Latała] | **Test / CI Engineer** |  
+| [Tytus Barański] | **Test / CI Engineer** |
+| [Franciszek Latała] | **Test / CI Engineer** |
 
 ---
 
