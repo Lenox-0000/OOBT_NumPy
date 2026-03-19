@@ -38,8 +38,8 @@ The main communication channels in the team are:
    - [x] Defining team roles and communication channels.
    - [x] Planning initial test scenarios.
 2. **Week 2 (09.03.2026 - 15.03.2026)**
-   - Setting up the download of the latest stable commit from the official NumPy Github repo
-   - Setting up the local compilation and build of the module
+   - [x] Setting up the download of the latest stable commit from the official NumPy Github repo
+   - [x] Setting up the local compilation and build of the module
 3. **Week 3-4 (16.03.2026 - 29.03.2026)**
    - Implementing performance tests
 4. **Week 5-9 (30.03.2026 - 03.05.2026)**
