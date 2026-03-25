@@ -84,3 +84,9 @@ htmlcov/
 Thumbs.db
 *.swp
 *.swo
+
+### Benchmarks ###
+.benchmarks/
+benchmark_results.json
+benchmark_comparison.csv
+baseline_benchmark.json
