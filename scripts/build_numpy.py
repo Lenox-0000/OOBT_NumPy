@@ -52,6 +52,7 @@ def clone_repo(tag: str) -> None:
         "git", "clone",
         "--depth", "1",
         "--branch", tag,
+        "--recurse-submodules",
         "https://github.com/numpy/numpy.git",
         CLONE_DIR
     ])
@@ -60,7 +61,7 @@ def clone_repo(tag: str) -> None:
 def build_numpy() -> None:
     """Build and install NumPy from source."""
     print("[INFO] Installing build dependencies...")
-    run([sys.executable, "-m", "pip", "install", "--upgrade", "pip", "meson-python", "ninja", "Cython"])
+    run([sys.executable, "-m", "pip", "install", "--upgrade", "pip", "meson-python", "meson", "ninja", "Cython"])
 
     print("[INFO] Building and installing NumPy from source...")
     run([
