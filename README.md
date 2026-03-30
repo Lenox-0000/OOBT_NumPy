@@ -41,7 +41,7 @@ The main communication channels in the team are:
    - [x] Setting up the download of the latest stable commit from the official NumPy Github repo
    - [x] Setting up the local compilation and build of the module
 3. **Week 3-4 (16.03.2026 - 29.03.2026)**
-   - Implementing performance tests
+   - [x]Implementing performance tests
 4. **Week 5-9 (30.03.2026 - 03.05.2026)**
    - Implementing functional tests
 5. **Week 10 (04.05.2026 - 10.05.2026)**
