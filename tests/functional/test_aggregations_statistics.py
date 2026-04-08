@@ -88,7 +88,10 @@ class TestMean:
 
     def test_mean_with_inf(self, array_with_inf):
         """Mean of array containing +Inf and -Inf should be NaN."""
-        assert np.isnan(np.mean(array_with_inf))
+        with pytest.warns(RuntimeWarning):
+            assert np.isnan(np.mean(array_with_inf))
+
+        
 
     def test_mean_axis0(self, matrix_2d):
         """Column-wise mean along axis=0 for a 4x3 matrix."""
