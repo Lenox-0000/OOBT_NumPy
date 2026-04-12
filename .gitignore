@@ -47,6 +47,9 @@ conda-env/
 *.v12.suo
 *.v11.suo
 
+### Jet Brains Pycharm ###
+.idea
+
 # Build and Binary Folders
 [Dd]ebug/
 [Rr]elease/
@@ -81,3 +84,9 @@ htmlcov/
 Thumbs.db
 *.swp
 *.swo
+
+### Benchmarks ###
+.benchmarks/
+benchmark_results.json
+benchmark_comparison.csv
+baseline_benchmark.json

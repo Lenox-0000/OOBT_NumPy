@@ -2,6 +2,10 @@ name: OOB NumPy Testing Pipeline
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build-and-test:
@@ -25,8 +29,35 @@ jobs:
       - name: Run functional tests
         run: pytest tests/functional/ -v
 
-      - name: Run performance tests
-        run: pytest tests/performance/ -v --benchmark-autosave
+      - name: Run performance tests (pytest-benchmark)
+        run: |
+          pytest tests/performance/ -v \
+            --benchmark-autosave \
+            --benchmark-json=benchmark_results.json \
+            --benchmark-min-rounds=5 \
+            --benchmark-warmup=on \
+            --benchmark-disable-gc \
+            --benchmark-sort=mean
+
+      - name: Upload benchmark results as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-${{ github.run_id }}
+          path: |
+            benchmark_results.json
+            .benchmarks/
+
+      - name: Compare benchmarks against baseline (if available)
+        run: |
+          if [ -f baseline_benchmark.json ]; then
+            pytest-benchmark compare baseline_benchmark.json benchmark_results.json \
+              --csv=benchmark_comparison.csv || true
+            echo "--- Benchmark Comparison ---"
+            cat benchmark_comparison.csv
+          else
+            echo "No baseline found — skipping comparison. Save benchmark_results.json as baseline_benchmark.json to enable this step."
+          fi
 
       - name: Display test summary
         if: always()
@@ -35,3 +66,13 @@ jobs:
           echo "        OOB NumPy Test Summary          "
           echo "========================================"
           pytest tests/ --tb=no -q || true
+          echo ""
+          echo "--- Benchmark JSON Preview ---"
+          cat benchmark_results.json | python3 -c "
+          import json, sys
+          data = json.load(sys.stdin)
+          for b in data.get('benchmarks', []):
+              name = b['name']
+              mean = b['stats']['mean'] * 1000
+              print(f'  {name}: {mean:.4f} ms (mean)')
+          " || true
