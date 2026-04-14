@@ -12,14 +12,21 @@ As part of the project, the pipeline is (or will be) designed to:
 
 ---
 
-## Team and Roles (To Be Revised)
+## Quick Start
+**pip install -r requirements.txt**\
+Then trigger the pipeline via GitHub Actions (**workflow_dispatch**)\
+or locally: **pytest tests/ -v**
+
+---
+
+## Team and Roles
 The project is carried out in a 3-person team:
 
-| Name and Surname    | Team Role                    |
-|:--------------------|:-----------------------------|
-| [Adrian Zając]      | **Project Manager / Tester** |
-| [Tytus Barański]    | **Test / CI Engineer**       |
-| [Franciszek Latała] | **Test / CI Engineer**       |
+| Name and Surname    | Team Role                                |
+|:--------------------|:-----------------------------------------|
+| [Adrian Zając]      | **Project Manager / Test / CI Engineer** |
+| [Tytus Barański]    | **Test / CI Engineer**                   |
+| [Franciszek Latała] | **Test / CI Engineer**                   |
 
 ---
 
@@ -27,6 +34,9 @@ The project is carried out in a 3-person team:
 The main communication channels in the team are:
 * **Messenger** – daily communication, quick problem solving, and synchronization meetings.
 * **GitHub (Issues & Pull Requests)** – task management, ticket assignment, code review, and history of project agreements.
+Weekly teams meetings on Messenger every:
+* *Monday* from 17:00 to 18:00 (GMT +2) - prepare work plan for given week
+* *Friday* from 7:20 to 9:55 (GMT +2) - summarise work done in given week, share insights and problems
 
 ---
 
@@ -66,5 +76,30 @@ The main communication channels in the team are:
 ├── requirements.txt            # Dependencies needed to run the tests
 └── README.md                   # This file
 ```
+
+---
+
+## Definition of Done (DoD)
+A task or milestone is considered done when all of the following conditions are met:
+
+**Code & Tests**
+* The code runs without errors in the CI pipeline on main
+* All existing tests continue to pass after the change
+* New functionality is covered by at least one test
+
+**Version Control**
+* The change was developed on a separate feature branch (e.g. feature/week-X)
+* The branch was merged into main via a Pull Request
+* The PR was reviewed by at least one other team member before merging
+* All commit messages are written in the imperative mood and are under ~50 characters
+
+**Documentation**
+* The README accurately reflects the current state of the project
+* If the change introduces new test scenarios, docs/test_scenarios.md is updated accordingly
+
+**Pipeline**
+
+* The GitHub Actions pipeline runs successfully on main after the merge
+* Benchmark results (if applicable) are saved and visible in the pipeline output
 
 ---
