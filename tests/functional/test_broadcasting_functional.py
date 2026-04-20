@@ -11,6 +11,7 @@ Usage:
 import pytest
 import numpy as np
 
+
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -20,27 +21,32 @@ def scalar():
     """Simple scalar value."""
     return 5.0
 
+
 @pytest.fixture
 def array_1d():
     """1-D array of shape (3,)."""
     return np.array([1.0, 2.0, 3.0], dtype=np.float64)
 
+
 @pytest.fixture
 def matrix_2d():
     """2-D array of shape (2, 3)."""
-    return np.array([[10, 20, 30], 
+    return np.array([[10, 20, 30],
                      [40, 50, 60]], dtype=np.float64)
+
 
 @pytest.fixture
 def col_vector():
     """2-D column vector of shape (2, 1)."""
-    return np.array([[1], 
+    return np.array([[1],
                      [2]], dtype=np.float64)
+
 
 @pytest.fixture
 def tensor_3d():
     """3-D array of shape (2, 2, 3)."""
     return np.arange(12, dtype=np.float64).reshape(2, 2, 3)
+
 
 # ---------------------------------------------------------------------------
 # Broadcasting Tests
@@ -53,9 +59,9 @@ class TestBasicBroadcasting:
         """A scalar should be added to every element of a 2D matrix."""
         # Act
         result = matrix_2d + scalar
-        
+
         # Assert
-        expected = np.array([[15.0, 25.0, 35.0], 
+        expected = np.array([[15.0, 25.0, 35.0],
                              [45.0, 55.0, 65.0]])
         np.testing.assert_allclose(result, expected)
 
@@ -63,9 +69,9 @@ class TestBasicBroadcasting:
         """A (3,) array should broadcast across a (2, 3) matrix (row-wise)."""
         # Act
         result = matrix_2d + array_1d
-        
+
         # Assert
-        expected = np.array([[11.0, 22.0, 33.0], 
+        expected = np.array([[11.0, 22.0, 33.0],
                              [41.0, 52.0, 63.0]])
         np.testing.assert_allclose(result, expected)
 
@@ -73,12 +79,13 @@ class TestBasicBroadcasting:
         """A (2, 1) array should broadcast across a (2, 3) matrix (column-wise)."""
         # Act
         result = matrix_2d * col_vector
-        
+
         # Assert
         # Row 0 multiplied by 1, Row 1 multiplied by 2
-        expected = np.array([[10.0, 20.0, 30.0], 
+        expected = np.array([[10.0, 20.0, 30.0],
                              [80.0, 100.0, 120.0]])
         np.testing.assert_allclose(result, expected)
+
 
 class TestMultiDimensionalBroadcasting:
     """Verifies broadcasting in higher dimensions and complex shape stretching."""
@@ -87,7 +94,7 @@ class TestMultiDimensionalBroadcasting:
         """Broadcasting (2, 3) into (2, 2, 3) tensor."""
         # Act
         result = tensor_3d + matrix_2d
-        
+
         # Assert
         # tensor_3d[0] is (2,3), tensor_3d[1] is (2,3)
         # matrix_2d is (2,3)
@@ -100,15 +107,16 @@ class TestMultiDimensionalBroadcasting:
         # Arrange
         a = np.arange(4).reshape(4, 1)
         b = np.arange(3)
-        
+
         # Act
         result = a + b
-        
+
         # Assert
         assert result.shape == (4, 3)
         for i in range(4):
             for j in range(3):
                 assert result[i, j] == a[i, 0] + b[j]
+
 
 class TestBroadcastingConstraints:
     """Verifies that NumPy correctly rejects incompatible shapes."""
@@ -117,7 +125,7 @@ class TestBroadcastingConstraints:
         """Attempting to broadcast (2, 3) and (2, 2) must raise ValueError."""
         # Arrange
         bad_shape_matrix = np.ones((2, 2))
-        
+
         # Act / Assert
         with pytest.raises(ValueError, match="operands could not be broadcast together"):
             _ = matrix_2d + bad_shape_matrix
@@ -126,10 +134,11 @@ class TestBroadcastingConstraints:
         """Attempting to broadcast (3,) with (4,) must fail."""
         # Arrange
         other_1d = np.array([1, 2, 3, 4])
-        
+
         # Act / Assert
         with pytest.raises(ValueError):
             _ = array_1d + other_1d
+
 
 class TestInPlaceBroadcasting:
     """Verifies that in-place operations also follow broadcasting rules."""
@@ -138,9 +147,9 @@ class TestInPlaceBroadcasting:
         """Using += with a broadcastable array."""
         # Act
         matrix_2d += array_1d
-        
+
         # Assert
-        expected = np.array([[11.0, 22.0, 33.0], 
+        expected = np.array([[11.0, 22.0, 33.0],
                              [41.0, 52.0, 63.0]])
         np.testing.assert_allclose(matrix_2d, expected)
 
@@ -151,8 +160,8 @@ class TestInPlaceBroadcasting:
         # (3,1) cannot be broadcast INTO a (2,3) via += because the result 
         # must fit in the original (2,3) shape, but the axes must match exactly 
         # or be 1.
-        col_vector_bad = np.array([[1], [2], [3]]) # (3, 1)
-        
+        col_vector_bad = np.array([[1], [2], [3]])  # (3, 1)
+
         # Act / Assert
         with pytest.raises(ValueError):
             matrix_2d += col_vector_bad
