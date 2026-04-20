@@ -37,13 +37,13 @@ def identity_3x3():
 
 
 @pytest.fixture
-def rect_A():
+def rect_a():
     """Rectangular matrix A shaped (3, 4) for non-square multiplication."""
     return np.arange(12, dtype=np.float64).reshape(3, 4)
 
 
 @pytest.fixture
-def rect_B():
+def rect_b():
     """Rectangular matrix B shaped (4, 2) compatible with rect_A."""
     return np.arange(8, dtype=np.float64).reshape(4, 2)
 
@@ -76,8 +76,8 @@ def large_square():
 @pytest.fixture
 def complex_matrix():
     """2x2 complex128 matrix to verify dtype support."""
-    return np.array([[1+2j, 3+4j],
-                     [5+6j, 7+8j]], dtype=np.complex128)
+    return np.array([[1 + 2j, 3 + 4j],
+                     [5 + 6j, 7 + 8j]], dtype=np.complex128)
 
 
 # ---------------------------------------------------------------------------
@@ -90,20 +90,20 @@ class TestDot:
     def test_dot_square_float_known_result(self, square_float):
         """np.dot of [[1,2],[3,4]] with itself must equal [[7,10],[15,22]]."""
         # Arrange
-        A = square_float
+        a = square_float
         expected = np.array([[7.0, 10.0],
-                              [15.0, 22.0]], dtype=np.float64)
+                             [15.0, 22.0]], dtype=np.float64)
 
         # Act
-        result = np.dot(A, A)
+        result = np.dot(a, a)
 
         # Assert
         np.testing.assert_allclose(result, expected)
 
-    def test_dot_rectangular_shape(self, rect_A, rect_B):
+    def test_dot_rectangular_shape(self, rect_a, rect_b):
         """np.dot of (3,4) @ (4,2) must produce a (3,2) result."""
         # Arrange / Act
-        result = np.dot(rect_A, rect_B)
+        result = np.dot(rect_a, rect_b)
 
         # Assert
         assert result.shape == (3, 2)
@@ -111,14 +111,14 @@ class TestDot:
     def test_dot_rectangular_known_result(self):
         """Verify element values for a small rectangular multiplication."""
         # Arrange
-        A = np.array([[1, 0], [0, 1], [2, 3]], dtype=np.float64)
-        B = np.array([[4, 5, 6], [7, 8, 9]], dtype=np.float64)
-        expected = np.array([[4,  5,  6],
-                             [7,  8,  9],
+        a = np.array([[1, 0], [0, 1], [2, 3]], dtype=np.float64)
+        b = np.array([[4, 5, 6], [7, 8, 9]], dtype=np.float64)
+        expected = np.array([[4, 5, 6],
+                             [7, 8, 9],
                              [29, 34, 39]], dtype=np.float64)
 
         # Act
-        result = np.dot(A, B)
+        result = np.dot(a, b)
 
         # Assert
         np.testing.assert_allclose(result, expected)
@@ -126,13 +126,13 @@ class TestDot:
     def test_dot_identity_is_noop(self, matrix_3x3, identity_3x3):
         """Multiplying any matrix by the identity must return that matrix."""
         # Arrange
-        A = matrix_3x3
+        a = matrix_3x3
 
         # Act
-        result = np.dot(A, identity_3x3)
+        result = np.dot(a, identity_3x3)
 
         # Assert
-        np.testing.assert_allclose(result, A)
+        np.testing.assert_allclose(result, a)
 
     def test_dot_by_zero_matrix_gives_zeros(self, square_float):
         """Multiplying by an all-zero matrix must yield an all-zero result."""
@@ -181,10 +181,10 @@ class TestDot:
     def test_dot_complex_matrix(self, complex_matrix):
         """np.dot must handle complex128 inputs without raising."""
         # Arrange
-        A = complex_matrix
+        a = complex_matrix
 
         # Act
-        result = np.dot(A, A)
+        result = np.dot(a, a)
 
         # Assert — result must have same complex dtype
         assert result.dtype == np.complex128
@@ -193,36 +193,36 @@ class TestDot:
     def test_dot_is_not_commutative(self, square_float):
         """Matrix multiplication is generally not commutative: A@B ≠ B@A."""
         # Arrange
-        A = square_float
-        B = np.array([[2.0, 0.0],
+        a = square_float
+        b = np.array([[2.0, 0.0],
                       [1.0, 3.0]], dtype=np.float64)
 
         # Act
-        AB = np.dot(A, B)
-        BA = np.dot(B, A)
+        ab = np.dot(a, b)
+        ba = np.dot(b, a)
 
         # Assert — results have the same shape but different values
-        assert AB.shape == BA.shape
-        assert not np.array_equal(AB, BA)
+        assert ab.shape == ba.shape
+        assert not np.array_equal(ab, ba)
 
     def test_dot_incompatible_shapes_raises(self):
         """np.dot on shape-incompatible matrices must raise ValueError."""
         # Arrange
-        A = np.ones((3, 4), dtype=np.float64)
-        B = np.ones((5, 2), dtype=np.float64)   # inner dims 4 ≠ 5
+        a = np.ones((3, 4), dtype=np.float64)
+        b = np.ones((5, 2), dtype=np.float64)  # inner dims 4 ≠ 5
 
         # Act / Assert
         with pytest.raises(ValueError):
-            np.dot(A, B)
+            np.dot(a, b)
 
     def test_dot_associativity(self, matrix_3x3):
         """Matrix multiplication must be associative: (A@B)@C == A@(B@C)."""
         # Arrange
-        A = B = C = matrix_3x3
+        a = b = c = matrix_3x3
 
         # Act
-        left  = np.dot(np.dot(A, B), C)
-        right = np.dot(A, np.dot(B, C))
+        left = np.dot(np.dot(a, b), c)
+        right = np.dot(a, np.dot(b, c))
 
         # Assert
         np.testing.assert_allclose(left, right, rtol=1e-10)
@@ -230,11 +230,11 @@ class TestDot:
     def test_dot_large_matrix_numerical_accuracy(self, large_square):
         """A @ inv(A) must be close to the identity for a well-conditioned matrix."""
         # Arrange
-        A     = large_square
-        A_inv = np.linalg.inv(A)
+        a = large_square
+        a_inv = np.linalg.inv(a)
 
         # Act
-        result = np.dot(A, A_inv)
+        result = np.dot(a, a_inv)
 
         # Assert — off-diagonal elements must be very close to 0
         np.testing.assert_allclose(result, np.eye(100), atol=1e-8)
@@ -250,20 +250,20 @@ class TestMatmul:
     def test_matmul_equals_at_operator(self, square_float):
         """np.matmul(A, B) must produce the same result as A @ B."""
         # Arrange
-        A = square_float
+        a = square_float
 
         # Act
-        via_function = np.matmul(A, A)
-        via_operator = A @ A
+        via_function = np.matmul(a, a)
+        via_operator = a @ a
 
         # Assert
         np.testing.assert_array_equal(via_function, via_operator)
 
-    def test_matmul_equals_dot_for_2d(self, rect_A, rect_B):
+    def test_matmul_equals_dot_for_2d(self, rect_a, rect_b):
         """For 2-D inputs, np.matmul must agree with np.dot."""
         # Arrange / Act
-        result_matmul = np.matmul(rect_A, rect_B)
-        result_dot    = np.dot(rect_A, rect_B)
+        result_matmul = np.matmul(rect_a, rect_b)
+        result_dot = np.dot(rect_a, rect_b)
 
         # Assert
         np.testing.assert_array_equal(result_matmul, result_dot)
@@ -273,12 +273,12 @@ class TestMatmul:
     def test_matmul_square_known_result(self, square_float):
         """np.matmul of [[1,2],[3,4]] with itself must equal [[7,10],[15,22]]."""
         # Arrange
-        A        = square_float
+        a = square_float
         expected = np.array([[7.0, 10.0],
-                              [15.0, 22.0]], dtype=np.float64)
+                             [15.0, 22.0]], dtype=np.float64)
 
         # Act
-        result = np.matmul(A, A)
+        result = np.matmul(a, a)
 
         # Assert
         np.testing.assert_allclose(result, expected)
@@ -286,18 +286,18 @@ class TestMatmul:
     def test_matmul_identity_is_noop(self, matrix_3x3, identity_3x3):
         """Multiplying any matrix by the identity via @ must return that matrix."""
         # Arrange
-        A = matrix_3x3
+        a = matrix_3x3
 
         # Act
-        result = A @ identity_3x3
+        result = a @ identity_3x3
 
         # Assert
-        np.testing.assert_allclose(result, A)
+        np.testing.assert_allclose(result, a)
 
-    def test_matmul_rectangular_output_shape(self, rect_A, rect_B):
+    def test_matmul_rectangular_output_shape(self, rect_a, rect_b):
         """np.matmul of (3,4) @ (4,2) must produce shape (3,2)."""
         # Arrange / Act
-        result = np.matmul(rect_A, rect_B)
+        result = np.matmul(rect_a, rect_b)
 
         # Assert
         assert result.shape == (3, 2)
@@ -313,12 +313,12 @@ class TestMatmul:
     def test_matmul_known_matrix_vector_values(self):
         """Verify element values for a matrix–vector product."""
         # Arrange
-        A        = np.array([[2, 0], [1, 3]], dtype=np.float64)
-        v        = np.array([4.0, 5.0])
+        a = np.array([[2, 0], [1, 3]], dtype=np.float64)
+        v = np.array([4.0, 5.0])
         expected = np.array([8.0, 19.0])
 
         # Act
-        result = A @ v
+        result = a @ v
 
         # Assert
         np.testing.assert_allclose(result, expected)
@@ -328,11 +328,11 @@ class TestMatmul:
     def test_matmul_batched_shape(self, batch_matrices, square_float):
         """np.matmul of (4,3,3) @ (3,3) must broadcast to (4,3,3)."""
         # Arrange
-        batch = batch_matrices          # (4, 3, 3)
-        M     = np.eye(3, dtype=np.float64)
+        batch = batch_matrices  # (4, 3, 3)
+        m = np.eye(3, dtype=np.float64)
 
         # Act
-        result = np.matmul(batch, M)
+        result = np.matmul(batch, m)
 
         # Assert
         assert result.shape == (4, 3, 3)
@@ -340,7 +340,7 @@ class TestMatmul:
     def test_matmul_batched_identity_is_noop(self, batch_matrices):
         """Batched matmul of identity stacks with themselves must stay identity."""
         # Arrange
-        batch = batch_matrices   # (4, 3, 3) — each slice is an identity
+        batch = batch_matrices  # (4, 3, 3) — each slice is an identity
 
         # Act
         result = np.matmul(batch, batch)
@@ -352,13 +352,13 @@ class TestMatmul:
     def test_matmul_batch_known_result(self):
         """Verify element values for a small batched multiplication."""
         # Arrange
-        A        = np.array([[[1, 2], [3, 4]],
-                              [[5, 6], [7, 8]]], dtype=np.float64)  # (2,2,2)
-        B        = np.eye(2, dtype=np.float64)
-        expected = A   # multiplying by identity returns self
+        a = np.array([[[1, 2], [3, 4]],
+                      [[5, 6], [7, 8]]], dtype=np.float64)  # (2,2,2)
+        b = np.eye(2, dtype=np.float64)
+        expected = a  # multiplying by identity returns self
 
         # Act
-        result = np.matmul(A, B)
+        result = np.matmul(a, b)
 
         # Assert
         np.testing.assert_allclose(result, expected)
@@ -377,12 +377,12 @@ class TestMatmul:
     def test_matmul_incompatible_shapes_raises(self):
         """np.matmul on shape-incompatible matrices must raise ValueError."""
         # Arrange
-        A = np.ones((3, 4), dtype=np.float64)
-        B = np.ones((5, 2), dtype=np.float64)   # inner dims 4 ≠ 5
+        a = np.ones((3, 4), dtype=np.float64)
+        b = np.ones((5, 2), dtype=np.float64)  # inner dims 4 ≠ 5
 
         # Act / Assert
         with pytest.raises(ValueError):
-            np.matmul(A, B)
+            np.matmul(a, b)
 
     # --- Dtype handling ------------------------------------------------------
 
@@ -407,11 +407,11 @@ class TestMatmul:
     def test_matmul_large_matrix_accuracy(self, large_square):
         """A @ inv(A) must be close to the identity for a well-conditioned matrix."""
         # Arrange
-        A     = large_square
-        A_inv = np.linalg.inv(A)
+        a = large_square
+        a_inv = np.linalg.inv(a)
 
         # Act
-        result = A @ A_inv
+        result = a @ a_inv
 
         # Assert
         np.testing.assert_allclose(result, np.eye(100), atol=1e-8)
@@ -419,10 +419,10 @@ class TestMatmul:
     def test_matmul_transpose_identity(self, large_square):
         """For any matrix A, (A @ A.T) must be symmetric."""
         # Arrange
-        A = large_square
+        a = large_square
 
         # Act
-        result = A @ A.T
+        result = a @ a.T
 
         # Assert — symmetric: result == result.T
         np.testing.assert_allclose(result, result.T, atol=1e-10)
@@ -433,11 +433,11 @@ class TestMatmul:
 # ---------------------------------------------------------------------------
 
 class TestMultiDot:
-    def test_multi_dot_two_matrices_matches_dot(self, rect_A, rect_B):
+    def test_multi_dot_two_matrices_matches_dot(self, rect_a, rect_b):
         """multi_dot of two matrices must match np.dot."""
         # Arrange / Act
-        result_multi = np.linalg.multi_dot([rect_A, rect_B])
-        result_dot   = np.dot(rect_A, rect_B)
+        result_multi = np.linalg.multi_dot([rect_a, rect_b])
+        result_dot = np.dot(rect_a, rect_b)
 
         # Assert
         np.testing.assert_allclose(result_multi, result_dot)
@@ -445,12 +445,12 @@ class TestMultiDot:
     def test_multi_dot_three_matrices_shape(self):
         """multi_dot of (2,3) @ (3,4) @ (4,2) must produce shape (2,2)."""
         # Arrange
-        A = np.ones((2, 3), dtype=np.float64)
-        B = np.ones((3, 4), dtype=np.float64)
-        C = np.ones((4, 2), dtype=np.float64)
+        a = np.ones((2, 3), dtype=np.float64)
+        b = np.ones((3, 4), dtype=np.float64)
+        c = np.ones((4, 2), dtype=np.float64)
 
         # Act
-        result = np.linalg.multi_dot([A, B, C])
+        result = np.linalg.multi_dot([a, b, c])
 
         # Assert
         assert result.shape == (2, 2)
@@ -458,13 +458,13 @@ class TestMultiDot:
     def test_multi_dot_three_matrices_known_result(self):
         """Verify element values for a chained 3-matrix product."""
         # Arrange
-        A        = np.array([[1, 2], [3, 4]], dtype=np.float64)
-        B        = np.eye(2, dtype=np.float64)
-        C        = np.array([[2, 0], [0, 2]], dtype=np.float64)
-        expected = np.dot(np.dot(A, B), C)  # reference via ordinary dot
+        a = np.array([[1, 2], [3, 4]], dtype=np.float64)
+        b = np.eye(2, dtype=np.float64)
+        c = np.array([[2, 0], [0, 2]], dtype=np.float64)
+        expected = np.dot(np.dot(a, b), c)  # reference via ordinary dot
 
         # Act
-        result = np.linalg.multi_dot([A, B, C])
+        result = np.linalg.multi_dot([a, b, c])
 
         # Assert
         np.testing.assert_allclose(result, expected)
@@ -472,11 +472,11 @@ class TestMultiDot:
     def test_multi_dot_matches_sequential_dot(self, matrix_3x3):
         """multi_dot chain must equal left-to-right sequential np.dot calls."""
         # Arrange
-        A = B = C = matrix_3x3
-        sequential = np.dot(np.dot(A, B), C)
+        a = b = c = matrix_3x3
+        sequential = np.dot(np.dot(a, b), c)
 
         # Act
-        result = np.linalg.multi_dot([A, B, C])
+        result = np.linalg.multi_dot([a, b, c])
 
         # Assert
         np.testing.assert_allclose(result, sequential, rtol=1e-10)
@@ -485,10 +485,10 @@ class TestMultiDot:
         """multi_dot must support leading/trailing 1-D vectors."""
         # Arrange
         v = vector_1d  # (3,)
-        M = matrix_3x3  # (3,3)
+        m = matrix_3x3  # (3,3)
 
         # Act — v @ M @ v should yield a scalar
-        result = np.linalg.multi_dot([v, M, v])
+        result = np.linalg.multi_dot([v, m, v])
 
         # Assert
-        assert result.ndim == 0   # scalar output
+        assert result.ndim == 0  # scalar output

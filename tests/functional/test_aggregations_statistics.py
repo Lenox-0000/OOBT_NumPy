@@ -91,8 +91,6 @@ class TestMean:
         with pytest.warns(RuntimeWarning):
             assert np.isnan(np.mean(array_with_inf))
 
-        
-
     def test_mean_axis0(self, matrix_2d):
         """Column-wise mean along axis=0 for a 4x3 matrix."""
         expected = np.array([5.5, 6.5, 7.5])

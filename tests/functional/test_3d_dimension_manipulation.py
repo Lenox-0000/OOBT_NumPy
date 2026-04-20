@@ -322,7 +322,7 @@ class TestTranspose:
 
         # Act
         via_function = np.transpose(arr)
-        via_method   = arr.transpose()
+        via_method = arr.transpose()
 
         # Assert
         np.testing.assert_array_equal(via_function, via_method)
