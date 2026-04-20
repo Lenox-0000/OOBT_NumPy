@@ -76,8 +76,8 @@ def large_square():
 @pytest.fixture
 def complex_matrix():
     """2x2 complex128 matrix to verify dtype support."""
-    return np.array([[1+2j, 3+4j],
-                     [5+6j, 7+8j]], dtype=np.complex128)
+    return np.array([[1 + 2j, 3 + 4j],
+                     [5 + 6j, 7 + 8j]], dtype=np.complex128)
 
 
 # ---------------------------------------------------------------------------
@@ -92,7 +92,7 @@ class TestDot:
         # Arrange
         A = square_float
         expected = np.array([[7.0, 10.0],
-                              [15.0, 22.0]], dtype=np.float64)
+                             [15.0, 22.0]], dtype=np.float64)
 
         # Act
         result = np.dot(A, A)
@@ -113,8 +113,8 @@ class TestDot:
         # Arrange
         A = np.array([[1, 0], [0, 1], [2, 3]], dtype=np.float64)
         B = np.array([[4, 5, 6], [7, 8, 9]], dtype=np.float64)
-        expected = np.array([[4,  5,  6],
-                             [7,  8,  9],
+        expected = np.array([[4, 5, 6],
+                             [7, 8, 9],
                              [29, 34, 39]], dtype=np.float64)
 
         # Act
@@ -209,7 +209,7 @@ class TestDot:
         """np.dot on shape-incompatible matrices must raise ValueError."""
         # Arrange
         A = np.ones((3, 4), dtype=np.float64)
-        B = np.ones((5, 2), dtype=np.float64)   # inner dims 4 ≠ 5
+        B = np.ones((5, 2), dtype=np.float64)  # inner dims 4 ≠ 5
 
         # Act / Assert
         with pytest.raises(ValueError):
@@ -221,7 +221,7 @@ class TestDot:
         A = B = C = matrix_3x3
 
         # Act
-        left  = np.dot(np.dot(A, B), C)
+        left = np.dot(np.dot(A, B), C)
         right = np.dot(A, np.dot(B, C))
 
         # Assert
@@ -230,7 +230,7 @@ class TestDot:
     def test_dot_large_matrix_numerical_accuracy(self, large_square):
         """A @ inv(A) must be close to the identity for a well-conditioned matrix."""
         # Arrange
-        A     = large_square
+        A = large_square
         A_inv = np.linalg.inv(A)
 
         # Act
@@ -263,7 +263,7 @@ class TestMatmul:
         """For 2-D inputs, np.matmul must agree with np.dot."""
         # Arrange / Act
         result_matmul = np.matmul(rect_A, rect_B)
-        result_dot    = np.dot(rect_A, rect_B)
+        result_dot = np.dot(rect_A, rect_B)
 
         # Assert
         np.testing.assert_array_equal(result_matmul, result_dot)
@@ -273,9 +273,9 @@ class TestMatmul:
     def test_matmul_square_known_result(self, square_float):
         """np.matmul of [[1,2],[3,4]] with itself must equal [[7,10],[15,22]]."""
         # Arrange
-        A        = square_float
+        A = square_float
         expected = np.array([[7.0, 10.0],
-                              [15.0, 22.0]], dtype=np.float64)
+                             [15.0, 22.0]], dtype=np.float64)
 
         # Act
         result = np.matmul(A, A)
@@ -313,8 +313,8 @@ class TestMatmul:
     def test_matmul_known_matrix_vector_values(self):
         """Verify element values for a matrix–vector product."""
         # Arrange
-        A        = np.array([[2, 0], [1, 3]], dtype=np.float64)
-        v        = np.array([4.0, 5.0])
+        A = np.array([[2, 0], [1, 3]], dtype=np.float64)
+        v = np.array([4.0, 5.0])
         expected = np.array([8.0, 19.0])
 
         # Act
@@ -328,8 +328,8 @@ class TestMatmul:
     def test_matmul_batched_shape(self, batch_matrices, square_float):
         """np.matmul of (4,3,3) @ (3,3) must broadcast to (4,3,3)."""
         # Arrange
-        batch = batch_matrices          # (4, 3, 3)
-        M     = np.eye(3, dtype=np.float64)
+        batch = batch_matrices  # (4, 3, 3)
+        M = np.eye(3, dtype=np.float64)
 
         # Act
         result = np.matmul(batch, M)
@@ -340,7 +340,7 @@ class TestMatmul:
     def test_matmul_batched_identity_is_noop(self, batch_matrices):
         """Batched matmul of identity stacks with themselves must stay identity."""
         # Arrange
-        batch = batch_matrices   # (4, 3, 3) — each slice is an identity
+        batch = batch_matrices  # (4, 3, 3) — each slice is an identity
 
         # Act
         result = np.matmul(batch, batch)
@@ -352,10 +352,10 @@ class TestMatmul:
     def test_matmul_batch_known_result(self):
         """Verify element values for a small batched multiplication."""
         # Arrange
-        A        = np.array([[[1, 2], [3, 4]],
-                              [[5, 6], [7, 8]]], dtype=np.float64)  # (2,2,2)
-        B        = np.eye(2, dtype=np.float64)
-        expected = A   # multiplying by identity returns self
+        A = np.array([[[1, 2], [3, 4]],
+                      [[5, 6], [7, 8]]], dtype=np.float64)  # (2,2,2)
+        B = np.eye(2, dtype=np.float64)
+        expected = A  # multiplying by identity returns self
 
         # Act
         result = np.matmul(A, B)
@@ -378,7 +378,7 @@ class TestMatmul:
         """np.matmul on shape-incompatible matrices must raise ValueError."""
         # Arrange
         A = np.ones((3, 4), dtype=np.float64)
-        B = np.ones((5, 2), dtype=np.float64)   # inner dims 4 ≠ 5
+        B = np.ones((5, 2), dtype=np.float64)  # inner dims 4 ≠ 5
 
         # Act / Assert
         with pytest.raises(ValueError):
@@ -407,7 +407,7 @@ class TestMatmul:
     def test_matmul_large_matrix_accuracy(self, large_square):
         """A @ inv(A) must be close to the identity for a well-conditioned matrix."""
         # Arrange
-        A     = large_square
+        A = large_square
         A_inv = np.linalg.inv(A)
 
         # Act
@@ -437,7 +437,7 @@ class TestMultiDot:
         """multi_dot of two matrices must match np.dot."""
         # Arrange / Act
         result_multi = np.linalg.multi_dot([rect_A, rect_B])
-        result_dot   = np.dot(rect_A, rect_B)
+        result_dot = np.dot(rect_A, rect_B)
 
         # Assert
         np.testing.assert_allclose(result_multi, result_dot)
@@ -458,9 +458,9 @@ class TestMultiDot:
     def test_multi_dot_three_matrices_known_result(self):
         """Verify element values for a chained 3-matrix product."""
         # Arrange
-        A        = np.array([[1, 2], [3, 4]], dtype=np.float64)
-        B        = np.eye(2, dtype=np.float64)
-        C        = np.array([[2, 0], [0, 2]], dtype=np.float64)
+        A = np.array([[1, 2], [3, 4]], dtype=np.float64)
+        B = np.eye(2, dtype=np.float64)
+        C = np.array([[2, 0], [0, 2]], dtype=np.float64)
         expected = np.dot(np.dot(A, B), C)  # reference via ordinary dot
 
         # Act
@@ -491,4 +491,4 @@ class TestMultiDot:
         result = np.linalg.multi_dot([v, M, v])
 
         # Assert
-        assert result.ndim == 0   # scalar output
+        assert result.ndim == 0  # scalar output
