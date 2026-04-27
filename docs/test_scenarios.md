@@ -171,6 +171,37 @@ If `baseline_benchmark.json` exists, a regression comparison is performed automa
 
 ---
 
+### 2.2 NumPy vs Pure-Python Array Comparison Benchmark
+
+**File:** `tests/performance/test_array_comparison.py`
+
+**Goal:** Quantify the performance gap between NumPy's `np.dot` and a naive pure-Python
+triple-loop matrix multiplication, validating the claim from scenario 2.1 that NumPy is
+"orders of magnitude faster" than a Python-native baseline.
+
+**Functions under test:** `np.dot`, custom pure-Python `python_matmul` (nested-list triple-loop)
+
+**Scenarios:**
+
+| Scenario | Description | Acceptance threshold |
+|---|---|---|
+| NumPy 1000×1000 matmul (reference) | `np.dot` on two 1000×1000 float64 matrices seeded with `rng=42` | Result shape `(1000,1000)`, dtype `float64`, all values finite |
+| Pure-Python 100×100 matmul (baseline) | Naive O(n³) triple-loop on equivalent Python lists; reduced size to keep CI runtime manageable | Result shape `(100,100)`; timing must demonstrate an order-of-magnitude slowdown vs NumPy |
+
+> **Note on matrix sizes:** The Python baseline intentionally uses 100×100 matrices instead
+> of 1000×1000. Scaling to full size would make the CI run impractically slow; the 100×100
+> result is already representative of the slowdown ratio.
+
+**Reporting:** Both benchmarks are collected in the same file so pytest-benchmark can print
+a unified comparison table. Mean timings (ms) for each scenario appear in the pipeline
+summary. Results are saved to `benchmark_results.json`.
+
+**Pass criterion:** No unhandled exception during execution; both benchmarks complete and
+their results appear in `benchmark_results.json`; the Python baseline mean time is visibly
+(at least one order of magnitude) larger than the NumPy reference time in the pipeline log.
+
+---
+
 ## 3. Acceptance Test Scenarios
 
 The following three scenarios are high-level end-to-end checks that validate the OOB
