@@ -142,6 +142,42 @@ on arrays of different but compatible shapes, and raises errors for incompatible
 
 ---
 
+### 1.5 Floating-Point Precision
+
+**File:** `tests/functional/test_floating_point_precision.py`
+
+**Goal:** Validate NumPy's handling of floating-point arithmetic, precision limits, and
+accumulation errors across different data types (`float32`, `float64`). Covers machine
+epsilon limits, catastrophic cancellation, accumulation stability in multidimensional
+arrays, and memory-layout preservation during maths.
+
+**Functions under test:** `np.finfo`, `np.testing.assert_allclose`,
+`np.testing.assert_array_equal`, `np.sum`, `np.errstate`, `np.linspace`,
+`np.shares_memory`, `ndarray.ravel`
+
+**Fixtures:**
+
+| Fixture | Description |
+|---|---|
+| `f_contiguous_3d_float64` | 2×3×4 Fortran-contiguous `float64` array built from `linspace(0.1, 1.0, 24)` |
+| `scalar_like_float32` | Zero-dimensional `float32` array holding `0.123456789` |
+| `catastrophic_cancellation_data` | Pair of nearly-equal `float64` arrays whose difference is on the order of `1e-15` / `1e-9` |
+
+**Test classes and selected scenarios:**
+
+| Class | Test | Scenario | Expected result |
+|---|---|---|---|
+| `TestPrecisionBasics` | `test_float32_truncation` | Cast `0.123456789` to `float32` and compare with true value | Difference exceeds `float64` epsilon; relative error within `1e-6`; array is 0-dimensional |
+| `TestPrecisionBasics` | `test_catastrophic_cancellation` | Subtract two nearly-equal `float64` arrays | Result close to `[1e-15, 1e-9]` with `atol=1e-10`, `rtol=0.0` |
+| `TestAccumulationAndMemory` | `test_fortran_layout_summation_stability` | Sum a 3D F-contiguous array along axis 0 | Output shape `(3,4)`; total sum `≈ 13.2` (`rtol=1e-14`); result is F-contiguous; no shared memory with source |
+| `TestAccumulationAndMemory` | `test_view_precision_sharing` | Flatten F-contiguous array with `ravel(order='K')` | Values identical after reshape back to `(2,3,4,'F')`; view shares memory with original |
+| `TestAccumulationAndMemory` | `test_invalid_floating_operations_raise` | Compute `zeros / zeros` under `np.errstate(invalid='raise')` | `FloatingPointError` raised with message matching `"invalid value encountered"` |
+
+**Pass criterion:** All assertions pass with `np.testing.assert_allclose` / `assert_array_equal`
+tolerances as specified per test; all expected exceptions are raised.
+
+---
+
 ## 2. Performance Test Scenarios
 
 Performance tests are located in `tests/performance/` and are run with `pytest-benchmark`.
@@ -243,16 +279,18 @@ results are visible in the pipeline output in a readable format.
 **Steps:**
 1. Trigger the pipeline manually.
 2. Observe the **Run functional tests** step.
-3. Observe the **Run performance tests** step.
-4. Observe the **Display test summary** step.
+3. Observe the **Run floating-point precision tests** step.
+4. Observe the **Run performance tests** step.
+5. Observe the **Display test summary** step.
 
 **Expected result:**
 - Functional tests: all collected test functions pass (0 failures reported by pytest).
+- Floating-point precision tests: all 5 test cases pass explicitly in their dedicated step.
 - Performance tests: benchmarks execute and `benchmark_results.json` is produced.
 - Test summary: the pipeline prints the OOB NumPy Test Summary block and the benchmark
   mean timings per test.
 
-**Pass criterion:** Exit code 0 for both test steps; `benchmark_results.json` is uploaded
+**Pass criterion:** Exit code 0 for all test steps; `benchmark_results.json` is uploaded
 as a pipeline artifact; timing values appear in the summary log.
 
 ---
@@ -269,12 +307,15 @@ measured.
 **Steps:**
 1. Open the completed pipeline run in the GitHub Actions UI.
 2. Read the **Run functional tests** log — test names and pass/fail status must be visible.
-3. Read the **Display test summary** log — the summary block must list per-benchmark
+3. Read the **Run floating-point precision tests** log — all 5 precision test cases and
+   their pass/fail markers must be visible as a dedicated section.
+4. Read the **Display test summary** log — the summary block must list per-benchmark
    mean times.
-4. Download the `benchmark-results-*` artifact and open `benchmark_results.json`.
+5. Download the `benchmark-results-*` artifact and open `benchmark_results.json`.
 
 **Expected result:**
 - The functional test log shows individual test names and their pass/fail markers.
+- The floating-point precision log shows all 5 test cases and their results explicitly.
 - The summary block lists at least one benchmark with a numeric mean time value.
 - `benchmark_results.json` is a valid JSON file containing a `benchmarks` array.
 

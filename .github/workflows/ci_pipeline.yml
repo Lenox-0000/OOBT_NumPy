@@ -38,6 +38,11 @@ jobs:
       - name: Run functional tests
         run: pytest tests/functional/ -v --junitxml=functional_results.xml
 
+      - name: Run floating-point precision tests
+        run: |
+          pytest tests/functional/test_floating_point_precision.py -v \
+            --junitxml=floating_point_results.xml
+
       - name: Run performance tests (pytest-benchmark)
         run: |
           pytest tests/performance/ -v \
@@ -56,6 +61,7 @@ jobs:
           name: test-results-${{ github.run_id }}
           path: |
             functional_results.xml
+            floating_point_results.xml
             performance_results.xml
             benchmark_results.json
             .benchmarks/
