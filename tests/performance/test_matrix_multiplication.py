@@ -16,6 +16,7 @@ import numpy as np
 MATRIX_SIZES = [
     (100, 100),
     (500, 500),
+    (500, 1000),
     (1000, 1000),   # Primary scenario-2.1 size; regression baseline is tracked here
     (100, 1000),    # Rectangular: wide
     (1000, 100),    # Rectangular: tall
